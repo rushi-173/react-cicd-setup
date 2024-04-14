@@ -21,7 +21,7 @@ jobs:
         run: docker push rushi173/nodejs-app:latest 
  
   deploy_bakend:
-    needs: build
+    needs: build_backend
     runs-on: self-hosted 
     if: github.event_name == 'push' && github.event_path == 'server'
     steps:
