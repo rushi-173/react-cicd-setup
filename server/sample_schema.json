@@ -1,0 +1,16 @@
+{
+    "delivery_edit_times": [
+      {
+        "day": {
+          "day_of_the_week":"MONDAY",
+          "delivery_start_time": "",
+          "delivery_end_time": ""
+        },
+        "night": {
+          "day_of_the_week":"MONDAY",
+          "delivery_start_time": "",
+          "delivery_end_time": ""
+        }
+      }
+    ]
+  }
