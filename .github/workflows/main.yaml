@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_backend:
-       if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
@@ -21,7 +21,7 @@ jobs:
         run: docker push rushi173/nodejs-app:latest 
  
   deploy_bakend:
-       if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
     needs: build_backend
     runs-on: self-hosted
     steps:
