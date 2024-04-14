@@ -26,7 +26,7 @@ app.get("/", (req,res)=>{
 res.send("Hello World")
 });
 
-const PORT = 5000;
+const PORT = 3000;
 
 // Databse and server connection
 connectDb().then(() => {
