@@ -29,8 +29,8 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_URL }}
           ECR_REPOSITORY: nodejs-app
         run: |
-          docker build -t $ECR_REGISTRY/nodejs-app ./server
-          docker push $ECR_REGISTRY/nodejs-app
+          docker build -t ${{ secrets.ECR_URL }}/nodejs-app ./server
+          docker push ${{ secrets.ECR_URL }}/nodejs-app
  
   deploy_bakend:
     needs: build_backend
@@ -51,12 +51,12 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_URL }}
           ECR_REPOSITORY: nodejs-app
         run: |
-          docker pull $ECR_REGISTRY/nodejs-app:latest
+          docker pull ${{ secrets.ECR_URL }}/nodejs-app:latest
           docker rm -f nodejs-app-container
       - name: Delete old container
         run: docker rm -f nodejs-app-container  
       - name: Run Docker Container
-        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGODB_URI='${{ secrets.MONGODB_URI }}' $ECR_REGISTRY/nodejs-app
+        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGODB_URI='${{ secrets.MONGODB_URI }}' ${{ secrets.ECR_URL }}/nodejs-app
 
   # build_frontend:
   #   runs-on: ubuntu-latest
