@@ -50,6 +50,7 @@ jobs:
           registry: ${{ secrets.ECR_URL }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.ECR_REGION }}
       - name: Build Docker Image
         run: docker build -t ${{ secrets.ECR_URL }}/reactjs-app --build-arg REACT_APP_NODE_ENV='production' --build-arg REACT_APP_SERVER_BASE_URL='${{ secrets.REACT_APP_SERVER_BASE_URL }}' ./client
       - name: Push Image to Amazon ECR
