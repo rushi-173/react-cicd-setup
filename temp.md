@@ -10,6 +10,7 @@ on:
 
 jobs:
   build_backend:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
@@ -22,6 +23,7 @@ jobs:
         run: docker push rushi173/nodejs-app:latest 
  
   deploy_bakend:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
     needs: build_backend
     runs-on: self-hosted
     steps:
@@ -33,6 +35,7 @@ jobs:
         run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGODB_URI='${{ secrets.MONGODB_URI }}' rushi173/nodejs-app
 
   build_frontend:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'client/') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
@@ -45,6 +48,7 @@ jobs:
         run: docker push rushi173/reactjs-app:latest 
  
   deploy_frontend:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'client/') }}
     needs: build_frontend
     runs-on: self-hosted 
     steps:
