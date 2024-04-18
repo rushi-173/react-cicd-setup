@@ -23,19 +23,11 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Get commit hash
-        id: get-commit-hash
-        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
-      - name: Get timestamp
-        id: get-timestamp
-        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
-
       - name: Build, tag, and push the image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ secrets.ECR_URL }}
           ECR_REPOSITORY: nodejs-app
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
         run: |
           docker build -t $ECR_REGISTRY/nodejs-app:$IMAGE_TAG ./server
           docker push $ECR_REGISTRY/nodejs-app:$IMAGE_TAG
@@ -58,9 +50,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ secrets.ECR_URL }}
           ECR_REPOSITORY: nodejs-app
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
         run: |
-          docker pull $ECR_REGISTRY/nodejs-app
+          docker pull $ECR_REGISTRY/nodejs-app:latest
           docker rm -f nodejs-app-container
       - name: Delete old container
         run: docker rm -f nodejs-app-container  
