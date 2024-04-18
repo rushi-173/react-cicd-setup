@@ -12,6 +12,12 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
       # Removed Docker Hub login step
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ECR_URL }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build Docker Image
         run: docker build -t 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd  ./server
       - name: Push Image to ECR
@@ -22,6 +28,12 @@ jobs:
     runs-on: self-hosted
     steps:
       # Consider pre-building and deploying images from ECR for security reasons
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ECR_URL }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Pull image from ECR (Optional)
         run: docker pull 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest  # Remove if using pre-built images
       - name: Delete old container
@@ -34,6 +46,12 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ECR_URL }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       # Removed Docker Hub login step
       - name: Build Docker Image
         run: docker build -t 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd --build-arg REACT_APP_NODE_ENV='production' --build-arg REACT_APP_SERVER_BASE_URL='${{ secrets.REACT_APP_SERVER_BASE_URL }}'  ./client
@@ -44,6 +62,12 @@ jobs:
     needs: build_frontend
     runs-on: self-hosted
     steps:
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ECR_URL }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Pull image from ECR (Optional)
         run: docker pull 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest  # Remove if using pre-built images
       - name: Delete old container
