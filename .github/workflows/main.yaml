@@ -29,8 +29,8 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_URL }}
           ECR_REPOSITORY: nodejs-app
         run: |
-          docker build -t $ECR_REGISTRY/nodejs-app:$IMAGE_TAG ./server
-          docker push $ECR_REGISTRY/nodejs-app:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/nodejs-app ./server
+          docker push $ECR_REGISTRY/nodejs-app
  
   deploy_bakend:
     needs: build_backend
