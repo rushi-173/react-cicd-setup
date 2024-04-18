@@ -3,10 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - deployment
-    paths:
-      - 'server/**'
-      - 'client/**'
+      - new-deploy
 
 jobs:
   build_backend:
@@ -15,24 +12,24 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-      - name: Login to docker hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}     
+      # Removed Docker Hub login step
       - name: Build Docker Image
-        run: docker build -t rushi173/nodejs-app  ./server
-      - name: Publish Image to docker hub
-        run: docker push rushi173/nodejs-app:latest 
- 
+        run: docker build -t 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd  ./server
+      - name: Push Image to ECR
+        run: docker push 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest
+
   deploy_bakend:
-    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'server/') }}
+    if: ${{ github.event_name == 'push' && contains(github.event.head_composite.modified, 'server/') }}
     needs: build_backend
     runs-on: self-hosted
     steps:
-      - name: Pull image from docker hub
-        run: docker pull rushi173/nodejs-app:latest 
+      # Consider pre-building and deploying images from ECR for security reasons
+      - name: Pull image from ECR (Optional)
+        run: docker pull 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest  # Remove if using pre-built images
       - name: Delete old container
-        run: docker rm -f nodejs-app-container  
+        run: docker rm -f nodejs-app-container
       - name: Run Docker Container
-        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGODB_URI='${{ secrets.MONGODB_URI }}' rushi173/nodejs-app
+        run: docker run -d -p 4000:4000 --name nodejs-app-container -e MONGODB_URI='${{ secrets.MONGODB_URI }}' 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest
 
   build_frontend:
     if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'client/') }}
@@ -40,21 +37,20 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-      - name: Login to docker hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}     
+      # Removed Docker Hub login step
       - name: Build Docker Image
-        run: docker build -t rushi173/reactjs-app --build-arg REACT_APP_NODE_ENV='production' --build-arg REACT_APP_SERVER_BASE_URL='${{ secrets.REACT_APP_SERVER_BASE_URL }}'  ./client
-      - name: Publish Image to docker hub
-        run: docker push rushi173/reactjs-app:latest 
- 
+        run: docker build -t 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd --build-arg REACT_APP_NODE_ENV='production' --build-arg REACT_APP_SERVER_BASE_URL='${{ secrets.REACT_APP_SERVER_BASE_URL }}'  ./client
+      - name: Push Image to ECR
+        run: docker push 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest
+
   deploy_frontend:
     if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'client/') }}
     needs: build_frontend
-    runs-on: self-hosted 
+    runs-on: self-hosted
     steps:
-      - name: Pull image from docker hub
-        run: docker pull rushi173/reactjs-app:latest 
+      - name: Pull image from ECR (Optional)
+        run: docker pull 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest  # Remove if using pre-built images
       - name: Delete old container
         run: docker rm -f reactjs-app-container
       - name: Run Docker Container
-        run: docker run -d -p 80:80 --name reactjs-app-container rushi173/reactjs-app
+        run: docker run -d -p 80:80 --name reactjs-app-container 551347377649.dkr.ecr.us-east-1.amazonaws.com/react-ci-cd:latest
