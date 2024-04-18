@@ -18,6 +18,12 @@ const App = () => {
   return (
     <div>
       <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
+      <h1>Hello WOrld</h1>
       <h1>{st}</h1>
     </div>
   );

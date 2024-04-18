@@ -23,7 +23,7 @@ app.use(express.json());
 
 //Main Route 
 app.get("/", (req,res)=>{
-res.json(({text:"Hello World"}))
+res.json(({text:"Hello World new app"}))
 });
 
 const PORT = 4000;
