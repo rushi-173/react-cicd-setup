@@ -31,6 +31,8 @@ jobs:
     needs: build_backend
     runs-on: self-hosted
     steps:
+      - name: Set AWS Region
+        run: export AWS_DEFAULT_REGION=${{ secrets.ECR_REGION }}
       - name: Pull image from Amazon ECR
         run: docker pull ${{ secrets.ECR_URL }}/nodejs-app:latest 
       - name: Delete old container
@@ -60,6 +62,8 @@ jobs:
     needs: build_frontend
     runs-on: self-hosted 
     steps:
+      - name: Set AWS Region
+        run: export AWS_DEFAULT_REGION=${{ secrets.ECR_REGION }}
       - name: Pull image from Amazon ECR
         run: docker pull ${{ secrets.ECR_URL }}/reactjs-app:latest 
       - name: Delete old container
